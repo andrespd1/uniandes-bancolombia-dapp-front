@@ -102,7 +102,7 @@ class Landing extends React.Component {
 												<Button
 													className="btn-icon mb-3 mb-sm-0"
 													color="primary"
-													href="https://github.com/uniandes-bancolombia-dapp-project"
+													href="https://github.com/orgs/uniandes-bancolombia-dapp-project/repositories"
 													size="lg"
 													target="_blank">
 													<span className="btn-inner--icon mr-1">
