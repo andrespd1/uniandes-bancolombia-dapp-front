@@ -15,37 +15,49 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import 'assets/vendor/nucleo/css/nucleo.css';
-import 'assets/vendor/font-awesome/css/font-awesome.min.css';
-import 'assets/scss/argon-design-system-react.scss?v1.1.0';
+import "assets/vendor/nucleo/css/nucleo.css";
+import "assets/vendor/font-awesome/css/font-awesome.min.css";
+import "assets/scss/argon-design-system-react.scss?v1.1.0";
 
-import Index from 'views/Index.js';
-import Landing from 'views/examples/Landing.js';
-import Login from 'views/examples/Login.js';
-import Profile from 'views/examples/Profile.js';
-import Register from 'views/examples/Register.js';
+import Index from "views/Index.js";
+import Landing from "views/examples/Landing.js";
+import Login from "views/examples/Login.js";
+import Profile from "views/examples/Profile.js";
+import Register from "views/examples/Register.js";
+import { UserContextProvider } from "Contexts/UserContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
+const root = ReactDOM.createRoot(document.getElementById("root"));
+function App() {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact render={(props) => <Landing {...props} />} />
+        <Route
+          path="/login-page"
+          exact
+          render={(props) => <Login {...props} />}
+        />
+        <Route
+          path="/register-page"
+          exact
+          render={(props) => <Register {...props} />}
+        />
+        <Route
+          path="/profile-page"
+          exact
+          render={(props) => <Profile {...props} />}
+        />
+        <Redirect to="/" />
+      </Switch>
+    </BrowserRouter>
+  );
+}
 root.render(
-	<BrowserRouter>
-		<Switch>
-			<Route path="/" exact render={(props) => <Landing {...props} />} />
-			<Route
-				path="/login-page"
-				exact
-				render={(props) => <Login {...props} />}
-			/>
-			<Route
-				path="/register-page"
-				exact
-				render={(props) => <Register {...props} />}
-			/>
-			<Redirect to="/" />
-		</Switch>
-	</BrowserRouter>
+  <UserContextProvider>
+    <App />
+  </UserContextProvider>
 );
