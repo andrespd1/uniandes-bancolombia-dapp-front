@@ -36,8 +36,9 @@ import {
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import { QRCode } from "react-qr-svg";
-import React, { useContext, useEffect, useState, useRef} from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "Contexts/UserContext";
+import { useHistory } from 'react-router-dom';
 
 const base_url = "http://localhost:8080";
 function makeQr(data) {
@@ -52,7 +53,7 @@ function makeQr(data) {
 }
 
 //Check auth status every 2 seconds (intervalTime) for current session id
-async function listenAuthResponse(sessionId, setUser, user) {
+async function listenAuthResponse(sessionId, updateUser, history) {
   //Interval to check status in ms
   const intervalTime = 2000;
   const listener = setInterval(() => {
@@ -60,10 +61,9 @@ async function listenAuthResponse(sessionId, setUser, user) {
       if (response.ok) {
         //response contains polygon wallet id of authenticated user
         //console.log(response);
-		setUser(response);
-		console.log('user');
-		console.log(user);
-        window.location.href = "/profile-page";
+        updateUser(response);
+		history.push('profile-page');
+        //window.location.href = "/profile-page";
         //exit interval to stop making requests to the api
         clearInterval(listener);
       }
@@ -72,10 +72,12 @@ async function listenAuthResponse(sessionId, setUser, user) {
 }
 const Login = (props) => {
   const [QrCode, setQrCode] = useState(null);
-  const { user, setUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
   const refContainer = useRef(null);
+  const history = useHistory();
 
   useEffect(() => {
+	console.log(user);
     var sessionId;
     //Start signin proces in the API
     fetch(base_url + "/api/sign-in").then((response) => {
@@ -90,12 +92,12 @@ const Login = (props) => {
           return id;
         }) //Start api auth status listener
         .then(() => {
-          listenAuthResponse(sessionId, setUser, user);
+          listenAuthResponse(sessionId, updateUser, history);
         })
         .catch((err) => console.log(err));
       console.log(response);
     });
-  },[]);
+  }, []);
 
   return (
     <>
