@@ -47,15 +47,18 @@ async function listenAuthResponse(sessionId, updateUser, history) {
 			(response) => {
 				if (response.ok) {
 					//response contains polygon wallet id of authenticated user
-					fetch(
-						base_url + `/api/auth/login?walletId=${response.json().then((data) => data.walletId)}`
-					).then((response) => {
-						console.log('Response.body >>>>>>> ' + response.body);
-						if (response.ok) {
-							updateUser(response);
-							clearInterval(listener);
-							history.push('profile-page');
-						}
+					response.json().then((data) => {
+						fetch(base_url + `/api/auth/login?walletId=${data.walletId}`).then(
+							(response) => {
+								if (response.ok) {
+									response.json().then((user) => {
+										updateUser(user);
+										clearInterval(listener);
+										history.push('profile-page');
+									});
+								}
+							}
+						);
 					});
 				}
 			}
